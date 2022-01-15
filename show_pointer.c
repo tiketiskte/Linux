@@ -5,7 +5,7 @@ typedef unsigned char *byte_pointer;
 void show_bytes(byte_pointer start, size_t len) {
     size_t i;
     for(i = 0; i < len; i++) {
-        printf(" %.2x", start[i]);
+        printf("%p\t0x%.2x\n", start + i, start[i]);
     }
     printf("\n");
 }
@@ -32,6 +32,7 @@ void test_show_bytes(int val) {
 int main(void) {
     int x = 12345;
     // 12345 hex:0x00003039
+    show_bytes((byte_pointer) &x, sizeof(int));
     test_show_bytes(x);
     const char *s = "abcdef";
     show_bytes((byte_pointer) s, strlen(s));
