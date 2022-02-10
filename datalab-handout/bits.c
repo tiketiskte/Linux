@@ -168,7 +168,7 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-    return (!((~(x + 1)) ^ x)) & (!!(x + 1));
+     return (!((~(x + 1)) ^ x)) & (!!(x + 1));
     //return (!((~(x + 1)) ^ x)) & (!!((~x) ^ 0x00));
 //return 2;
 }
@@ -210,7 +210,15 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int a = x >> 6;
+  int condition1 = !!a;
+  int b = x >> 4;
+  int condition2 = !(b ^ 0b11);
+  int c = x & 0xF;
+  int res = c + (~0xA + 1); // int res = c - 0xA;
+  int condition3 = !!(res >> 31);
+  return (!condition1) & condition2 & condition3;
+ // return 2;
 }
 /* 
  * conditional - same as x ? y : z 
