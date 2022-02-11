@@ -211,13 +211,14 @@ int negate(int x) {
  */
 int isAsciiDigit(int x) {
   int a = x >> 6;
-  int condition1 = !!a;
+  int condition1 = !a;
   int b = x >> 4;
   int condition2 = !(b ^ 0b11);
   int c = x & 0xF;
-  int res = c + (~0xA + 1); // int res = c - 0xA;
-  int condition3 = !!(res >> 31);
-  return (!condition1) & condition2 & condition3;
+  int res = c + (~0xA + 1);
+  int tmp = 0x80 << 4;
+  int condition3 = !!(res & tmp);
+  return condition1 & condition2 & condition3;
  // return 2;
 }
 /* 
