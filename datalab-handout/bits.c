@@ -229,7 +229,10 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+ // int mask = ((!!x) << 31) >>31;
+  int mask = ~(!!x) + 1;
+  return (~mask & z) | (mask & y);
+ // return 2;
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
