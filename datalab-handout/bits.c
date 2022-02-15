@@ -344,7 +344,35 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+  unsigned s = (uf >> 31) & (0x1);
+  unsigned exp = (uf >> 23) & (0xFF);
+  unsigned frac = (uf & 0x7FFFFF);
+  if(exp == 0 && frac == 0) {
+    return 0;
+  }
+  if(exp == 0xFF) {
+    return 1 << 31; 
+  }
+  if(exp == 0) {
+    return 0; 
+  }
+  int E = exp - 127;
+  frac = frac | (1 << 23);
+  if(E > 31) {
+    return 1 << 31;
+  } else if(E < 0) {
+    return 0;
+  }
+  if(E >= 23) {
+    frac <<= (frac - 23);
+  } else {
+    frac >>= (23 - E);
+  }
+  if(s) {
+    return ~frac + 1;
+  }
+  return frac;
+  //return 2;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
