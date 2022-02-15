@@ -213,7 +213,7 @@ int isAsciiDigit(int x) {
   int a = x >> 6;
   int condition1 = !a;
   int b = x >> 4;
-  int condition2 = !(b ^ 0b11);
+  int condition2 = !(b ^ 0x3);
   int c = x & 0xF;
   int res = c + (~0xA + 1);
   int tmp = 0x80 << 4;
@@ -285,15 +285,15 @@ int howManyBits(int x) {
   x = ((~flag) & x) | (flag & (~x));
   int bit_16, bit_8, bit_4, bit_2, bit_1, bit_0;
 
-  bit_16 = (!((!!(x >> 16)) ^ 0b1)) << 4;
+  bit_16 = (!((!!(x >> 16)) ^ 0x1)) << 4;
   x >>= bit_16;
-  bit_8 = (!((!!(x >> 8)) ^ 0b1)) << 3;
+  bit_8 = (!((!!(x >> 8)) ^ 0x1)) << 3;
   x >>= bit_8;
-  bit_4 = (!((!!(x >> 4)) ^ 0b1)) << 2;
+  bit_4 = (!((!!(x >> 4)) ^ 0x1)) << 2;
   x >>= bit_4;
-  bit_2 = (!((!!(x >> 2)) ^ 0b1)) << 1;
+  bit_2 = (!((!!(x >> 2)) ^ 0x1)) << 1;
   x >>= bit_2;
-  bit_1 = (!((!!(x >> 1)) ^ 0b1));
+  bit_1 = (!((!!(x >> 1)) ^ 0x1));
   x >>= bit_1;
   bit_0 = x;
   
@@ -314,7 +314,22 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+  unsigned s = (uf >> 31) & (0x1);
+  unsigned exp = (uf >> 23) & (0xFF);
+  unsigned frac = (uf & 0x7FFFFF);
+  if(exp == 0 && frac == 0) {
+    return uf;
+  }
+  if(exp == 0xFF) {
+    return uf; 
+  }
+  if(exp == 0) {
+    frac <<= 1;
+    return (s << 31) | frac;
+  }
+  exp++;
+  return (s << 31) | (exp << 23) | (frac);
+  //return 2;
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
