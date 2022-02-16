@@ -388,5 +388,16 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-    return 2;
+  if(x > 127) {
+      return 0xFF << 23;
+    } else if(x < -149) {
+      return 0;
+    } else if(x >= -126) {
+      int exp = x + 127;
+      return exp << 23;
+    } else {
+      int shift = 23 + (x + 126);
+      return 1 << shift;
+    }
+   // return 2;
 }
