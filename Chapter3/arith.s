@@ -5,11 +5,13 @@
 arith:
 .LFB0:
 	.cfi_startproc
-	xorq	%rsi, %rdi
-	leaq	(%rdx,%rdx,2), %rax
-	salq	$4, %rax
-	andl	$252645135, %edi
-	subq	%rdi, %rax
+	movl	12(%esp), %eax
+	movl	8(%esp), %edx
+	xorl	4(%esp), %edx
+	leal	(%eax,%eax,2), %eax
+	sall	$4, %eax
+	andl	$252645135, %edx
+	subl	%edx, %eax
 	ret
 	.cfi_endproc
 .LFE0:
