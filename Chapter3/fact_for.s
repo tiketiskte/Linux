@@ -5,16 +5,19 @@
 fact_for:
 .LFB0:
 	.cfi_startproc
+	cmpq	$1, %rdi
+	jle	.L4
 	movl	$1, %eax
 	movl	$2, %edx
-	jmp	.L2
 .L3:
 	imulq	%rdx, %rax
 	addq	$1, %rdx
-.L2:
-	cmpq	%rdi, %rdx
-	jle	.L3
+	cmpq	%rdx, %rdi
+	jge	.L3
 	rep ret
+.L4:
+	movl	$1, %eax
+	ret
 	.cfi_endproc
 .LFE0:
 	.size	fact_for, .-fact_for
