@@ -63,16 +63,26 @@ echo:
 	.cfi_offset 3, -16
 	subq	$16, %rsp
 	.cfi_def_cfa_offset 32
-	leaq	8(%rsp), %rbx
+	movq	%fs:40, %rax
+	movq	%rax, 8(%rsp)
+	xorl	%eax, %eax
+	movq	%rsp, %rbx
 	movq	%rbx, %rdi
 	call	gets
 	movq	%rbx, %rdi
 	call	puts@PLT
+	movq	8(%rsp), %rax
+	subq	%fs:40, %rax
+	jne	.L11
 	addq	$16, %rsp
+	.cfi_remember_state
 	.cfi_def_cfa_offset 16
 	popq	%rbx
 	.cfi_def_cfa_offset 8
 	ret
+.L11:
+	.cfi_restore_state
+	call	__stack_chk_fail@PLT
 	.cfi_endproc
 .LFE24:
 	.size	echo, .-echo
